@@ -1,0 +1,72 @@
+﻿<div class="jumbotron">
+    <h1>Bing News</h1>
+    <p class="lead">Searching Bing News Here!</p>
+</div>
+
+<h2>Search Results</h2>
+<table id="searchResults" class="table table-striped table-bordered" cellspacing="0" style="width:100%" />
+
+@section HeaderStyles {
+    @Styles.Render("~/Content/datatables")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/datatables")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#searchResults").DataTable({
+                ajax: "/api/NewsSearch/GetDataTable/"
+                , columns: [
+                    {
+                        name: "name",
+                        data: "name",
+                        title: "Name",
+                        sortable: false,
+                        searchable: false,
+                        render: function(data, type, row, meta) {
+                            if (type !== "display") {
+                                return data;
+                            }
+
+                            return $('<a>')
+                               .attr('href', row.url)
+                               .text(data)
+                              .wrap('<div></div>')
+                              .parent()
+                              .html();
+                        }
+                    }
+                    , {
+                        name: "description",
+                        data: "description",
+                        title: "Description",
+                        sortable: false,
+                        searchable: false
+                    }
+                ]
+                , serverSide: true
+                , processing: true
+                , deferLoading: 0
+            });
+        });
+
+        //$("#doSearch").click(function () {
+        //    $("#searchResults").DataTable({
+        //        ajax: {
+        //            url: "/api/NewsSearch" //?keyword=" + $("#searchTerms").val()
+        //            , dataSrc: function(result) {
+        //                var json = jQuery.parseJSON(result);
+        //                return json.value;
+        //            }
+        //        }
+        //        , columns: [
+        //            { data: "name" }
+        //            , { data: "url" }
+        //        ]
+        //        , serverSide: true
+        //        , processing: true
+        //    });
+        //});
+    </script>
+}
